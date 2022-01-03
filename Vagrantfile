@@ -17,57 +17,58 @@ invent=[
 #    :frwd    => true,
 #    :prt_in  => "8080",
 #    :prt_out => "8086"
-  },
-  {
-    :name    => "kub-master-2" + DOMAIN,
-    :cpu     => "2",
-    :memory  => "4096",
-#   :gui     => true,
-    :lan     => { ip: LAN + "37" },
-#    :frwd    => true,
-#    :prt_in  => "8080",
-#    :prt_out => "8087"
-  },
-  {
-    :name    => "kub-master-3" + DOMAIN,
-    :cpu     => "2",
-    :memory  => "4096",
-#   :gui     => true,
-    :lan     => { ip: LAN + "38" },
-#    :frwd    => true,
-#    :prt_in  => "8080",
-#    :prt_out => "8088"
-  },
-  {
-    :name    => "kub-ingress-1" + DOMAIN,
-    :cpu     => "2",
-    :memory  => "4096",
-#   :gui     => true,
-    :lan     => { ip: LAN + "39" },
-#    :frwd    => true,
-#    :prt_in  => "8080",
-#    :prt_out => "8089"
-  },
-  {
-    :name    => "kub-node-1" + DOMAIN,
-    :cpu     => "2",
-    :memory  => "4096",
-#   :gui     => true,
-    :lan     => { ip: LAN + "32" },
-#    :frwd    => true,
-#    :prt_in  => "8080",
-#    :prt_out => "8082"
-  },
-  {
-    :name    => "kub-node-2" + DOMAIN,
-    :cpu     => "2",
-    :memory  => "4096",
-#   :gui     => true,
-    :lan     => { ip: LAN + "33" },
-#    :frwd    => true,
-#    :prt_in  => "8080",
-#    :prt_out => "8083"
   }
+# ,
+#   {
+#     :name    => "kub-master-2" + DOMAIN,
+#     :cpu     => "2",
+#     :memory  => "4096",
+# #   :gui     => true,
+#     :lan     => { ip: LAN + "37" },
+# #    :frwd    => true,
+# #    :prt_in  => "8080",
+# #    :prt_out => "8087"
+#   },
+#   {
+#     :name    => "kub-master-3" + DOMAIN,
+#     :cpu     => "2",
+#     :memory  => "4096",
+# #   :gui     => true,
+#     :lan     => { ip: LAN + "38" },
+# #    :frwd    => true,
+# #    :prt_in  => "8080",
+# #    :prt_out => "8088"
+#   },
+#   {
+#     :name    => "kub-ingress-1" + DOMAIN,
+#     :cpu     => "2",
+#     :memory  => "4096",
+# #   :gui     => true,
+#     :lan     => { ip: LAN + "39" },
+# #    :frwd    => true,
+# #    :prt_in  => "8080",
+# #    :prt_out => "8089"
+#   },
+#   {
+#     :name    => "kub-node-1" + DOMAIN,
+#     :cpu     => "2",
+#     :memory  => "4096",
+# #   :gui     => true,
+#     :lan     => { ip: LAN + "32" },
+# #    :frwd    => true,
+# #    :prt_in  => "8080",
+# #    :prt_out => "8082"
+#   },
+#   {
+#     :name    => "kub-node-2" + DOMAIN,
+#     :cpu     => "2",
+#     :memory  => "4096",
+# #   :gui     => true,
+#     :lan     => { ip: LAN + "33" },
+# #    :frwd    => true,
+# #    :prt_in  => "8080",
+# #    :prt_out => "8083"
+#   }
 ]
 
 Vagrant.configure("2") do |config|
@@ -99,4 +100,13 @@ Vagrant.configure("2") do |config|
 #      end
     end
   end
+  config.vm.provision "shell", inline: <<-SHELL
+    echo -e "vagrant\nvagrant" | passwd root
+    echo "PermitRootLogin yes" >> /etc/ssh/sshd_config
+    sed -in 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+    service ssh restart
+  SHELL
+  # config.ssh.username   = 'root'
+  # config.ssh.password   = 'root'
+  # config.ssh.insert_key = 'true'
 end
